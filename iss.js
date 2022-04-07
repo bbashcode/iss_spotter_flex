@@ -9,7 +9,7 @@
 
 const request = require("request");
 
-const fetchMyIP = function(callback) { 
+const fetchMyIP = function(callback) {
   // use request to fetch IP address from JSON API
   request("https://api64.ipify.org?format=json", (error, response, body) => {
     const data = JSON.parse(body);
@@ -21,7 +21,7 @@ const fetchMyIP = function(callback) {
       return;
     }
 
-    if(error){
+    if (error) {
       callback(null, error);
       return;
     } else {
@@ -29,7 +29,7 @@ const fetchMyIP = function(callback) {
     }
   });
 
-  return callback
+  return callback;
 };
 
 module.exports = { fetchMyIP };
