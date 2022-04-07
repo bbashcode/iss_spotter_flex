@@ -26,7 +26,7 @@ const fetchMyIP = function(callback) {
 
 };
 
-const fetchCoordsByIP = function fetchGeoCoordinatesByIp(ip, callback){
+const fetchCoordsByIP = function(ip, callback) {
   request(`http://ip-api.com/json/${ip}`, (error, response, body) => {
     if (error) return callback(null, error);
 
@@ -42,5 +42,22 @@ const fetchCoordsByIP = function fetchGeoCoordinatesByIp(ip, callback){
   });
 };
 
+const fetchISSFlyOverTimes = function(geoCode, callback) {
+  const url = `https://iss-pass.herokuapp.com/json/?lat=${geoCode.latitude}&lon=${geoCode.longitude}`;
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+  request(url, (error, response, body) => {
+    if (error) return callback(null, error);
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching ISS flyover time. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+
+    const flyOverTime = JSON.parse(body);
+    
+    callback(null, flyOverTime);
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, fetchISSFlyOverTimes };
