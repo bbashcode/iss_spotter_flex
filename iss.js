@@ -23,6 +23,24 @@ const fetchMyIP = function(callback) {
     const ip = JSON.parse(body).ip;
     callback(null, ip);
   });
+
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = function fetchGeoCoordinatesByIp(ip, callback){
+  request(`http://ip-api.com/json/${ip}`, (error, response, body) => {
+    if (error) return callback(null, error);
+
+    if (response.statusCode !== 200) {
+      const msg = `Status Code ${response.statusCode} when fetching geocode by the IP. Response: ${body}`;
+      callback(Error(msg), null);
+      return;
+    }
+
+    const {lat, lon} = JSON.parse(body);
+    
+    callback(null, {lat, lon});
+  });
+};
+
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
