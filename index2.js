@@ -1,12 +1,20 @@
 //index2.js
 
-const {fetchMyIP, fetchCoordsByIP, nextISSTimesForMyLocation} = require("./iss_promised");
+const {nextISSTimesForMyLocation} = require("./iss_promised");
 
-fetchMyIP()
-  .then(fetchCoordsByIP)
-  .then(nextISSTimesForMyLocation)
-  .then(body => {
-    const data = JSON.parse(body);
-    const {lat, lon} = data;
-    console.log("The geo coords are, latitude: ", lat," , longitutde: ", lon);
+const printPassTimes = function(passTimes) {
+  for (const pass of passTimes) {
+    const datetime = new Date(0);
+    datetime.setUTCSeconds(pass.risetime);
+    const duration = pass.duration;
+    console.log(`Next pass at ${datetime} for ${duration} seconds!`);
+  }
+};
+
+nextISSTimesForMyLocation()
+  .then((passTimes) => {
+    printPassTimes(passTimes);
+})
+  .catch((error) => {
+    console.log("It didn't work: ", error.message);
   });

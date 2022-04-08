@@ -9,9 +9,21 @@ const fetchCoordsByIP = function(body){
   return request(`http://ip-api.com/json/${ip}`);
 }
 
-const nextISSTimesForMyLocation = function(body){
-  const url = `https://iss-pass.herokuapp.com/json/?lat=${body.lat}&lon=${body.lon}`;
+const fetchISSFlyOverTimes = function(body){
+  const {lat, lon} = JSON.parse(body);
+  const url = `https://iss-pass.herokuapp.com/json/?lat=${lat}&lon=${lon}`;
   return request(url);
 }
 
-module.exports = { fetchMyIP, fetchCoordsByIP };
+
+const nextISSTimesForMyLocation = function() {
+  return fetchMyIP()
+    .then(fetchCoordsByIP)
+    .then(fetchISSFlyOverTimes)
+    .then((data) => {
+      const { response } = JSON.parse(data);
+      return response;
+    });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP, nextISSTimesForMyLocation };
