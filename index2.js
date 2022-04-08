@@ -1,6 +1,12 @@
 //index2.js
 
-const {fetchMyIP} = require("./iss_promised");
+const {fetchMyIP, fetchCoordsByIP, nextISSTimesForMyLocation} = require("./iss_promised");
 
 fetchMyIP()
-  .then(body => console.log(JSON.parse(body)));
+  .then(fetchCoordsByIP)
+  .then(nextISSTimesForMyLocation)
+  .then(body => {
+    const data = JSON.parse(body);
+    const {lat, lon} = data;
+    console.log("The geo coords are, latitude: ", lat," , longitutde: ", lon);
+  });
